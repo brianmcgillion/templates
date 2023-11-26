@@ -1,0 +1,2 @@
+# templates
+nix flake templates
