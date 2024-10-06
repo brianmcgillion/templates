@@ -24,8 +24,15 @@
           # Golang
           gofmt.enable = true;
         };
+
+        settings.global.excludes = [
+          ".git/*"
+          ".github/*"
+          ".direnv/*"
+          ".envrc"
+        ];
       };
-      #TODO: clean this up
-      #formatter = config.treefmt.build.wrapper;
+
+      formatter = config.treefmt.build.wrapper;
     };
 }

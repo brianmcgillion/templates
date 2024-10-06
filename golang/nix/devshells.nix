@@ -1,6 +1,8 @@
 # Copyright 2022-2024 TII (SSRC) and the Ghaf contributors
 # SPDX-License-Identifier: Apache-2.0
+{ inputs, lib, ... }:
 {
+  imports = [ inputs.devshell.flakeModule ];
   perSystem =
     {
       config,
@@ -9,28 +11,48 @@
       ...
     }:
     {
-      devShells.default = pkgs.mkShell {
-        name = "Golang devshell";
-        meta.description = "Golang development environment";
-        #TODO look at adding Mission control etc here
-        inputsFrom = [
-          config.treefmt.build.programs # See ./treefmt.nix
-          config.treefmt.build.wrapper
-          config.pre-commit.devShell
-        ];
-        packages =
-          builtins.attrValues {
-            inherit (pkgs)
-              go
-              gomodifytags
-              gopls
-              gore
-              gotests
-              gotools
-              golangci-lint
-              ;
+      devshells.default = {
+        devshell = {
+          name = "Golang devshell";
+          meta.description = "Golang development environment";
+          packages =
+            builtins.attrValues {
+              inherit (pkgs)
+                go
+                gomodifytags
+                gopls
+                gore
+                gosec
+                gotests
+                gotools
+                go-tools
+                golangci-lint
+                ;
+            }
+            ++ [
+              inputs'.nix-fast-build.packages.default
+              config.treefmt.build.wrapper
+            ]
+            ++ lib.attrValues config.treefmt.build.programs;
+        };
+
+        commands = [
+          {
+            help = "Check golang vulnerabilities";
+            name = "go-checksec";
+            command = "gosec ./...";
           }
-          ++ [ inputs'.nix-fast-build.packages.default ];
+          {
+            help = "Update go dependencies";
+            name = "go-update";
+            command = "go get -u ./... && go mod tidy && go mod vendor";
+          }
+          {
+            help = "golang linter";
+            package = "golangci-lint";
+            category = "linters";
+          }
+        ];
       };
     };
 }
