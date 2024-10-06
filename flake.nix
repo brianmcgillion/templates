@@ -1,17 +1,18 @@
 {
   description = "Templates for development";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+  outputs =
+    { self }:
+    {
 
-  outputs = {
+      templates = {
 
-    templates = {
-
-      go = {
-        path = ./golang;
-        description = "Go (Golang) development environment";
+        go = {
+          path = ./golang;
+          description = "Go (Golang) development environment";
+        };
       };
-      #default = go;
+
+      defaultTemplate = self.templates.trivial;
     };
-  };
 }
