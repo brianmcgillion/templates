@@ -3,8 +3,8 @@
 { pkgs, ... }:
 
 pkgs.buildGoModule {
-  pname = "hello-go-template";
-  version = "v0.1";
+  pname = "hello-go";
+  version = "v0.1.1";
 
   src = ./.;
 
@@ -12,5 +12,5 @@ pkgs.buildGoModule {
   # if using the devshell the go-update will ensure that
   # `go mod vendor` is run to keep the vendor directory up to date
   # this is tracked so it will give the reproducibility of the build
-  vendorSha256 = null;
+  vendorHash = null;
 }
